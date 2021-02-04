@@ -5,3 +5,62 @@
 
     
 // Test verification with incorrect proof
+
+const assert = require('assert');
+const fs = require('fs');
+
+var SquareVerifier = artifacts.require('Verifier');
+
+contract('TestSquareVerifier', accounts => {
+
+    const accountOne = accounts[0];
+    const accountTwo = accounts[1];
+
+    describe('test zokrates', function () {
+        
+        let proof = JSON.parse(fs.readFileSync(__dirname+'/proof.json'));
+
+        beforeEach(async function () { 
+            this.contract = await SquareVerifier.new();
+        })
+
+        it('should validate transaction if the correct proof is used', async function () { 
+            let ok = true;
+            let isValidProof = false;
+            
+            try{
+                isValidProof = await this.contract.verifyTx(proof.proof.a, proof.proof.b, proof.proof.c, proof.inputs);
+            }
+            catch{
+                ok = false;
+            }
+            assert.equal(ok, true, "Error during call to verifyTx");
+            if(ok===true){
+                assert.equal(isValidProof, true, `verifyTx should validate the proof.`);
+            }
+
+        });
+
+        it('should not validate transaction if an incorrect proof is used', async function () { 
+            let ok = true;
+            let isValidProof = true;
+            
+            // modify proof as in https://zokrates.github.io/rng_tutorial.html
+            let cheat = [...proof.inputs];
+            cheat[cheat.length-1] = cheat[cheat.length-1].replace(/[01]$/, cheat[cheat.length-1][65] == '1' ? '0': '1');
+
+            try{
+                isValidProof = await this.contract.verifyTx(proof.proof.a, proof.proof.b, proof.proof.c, cheat);
+            }
+            catch{
+                ok = false;
+            }
+            assert.equal(ok, true, "Error during call to verifyTx");
+            if(ok===true){
+                assert.equal(isValidProof, false, `verifyTx should not validate the proof.`);
+            }
+
+        });
+
+    });
+});

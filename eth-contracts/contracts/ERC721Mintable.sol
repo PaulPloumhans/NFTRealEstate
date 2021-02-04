@@ -8,6 +8,7 @@ import "openzeppelin-solidity/contracts/token/ERC721/ERC721.sol";
 import "openzeppelin-solidity/contracts/access/Ownable.sol";
 import "openzeppelin-solidity/contracts/utils/Pausable.sol";
 import "openzeppelin-solidity/contracts/utils/Strings.sol";
+
 //import "./Oraclize.sol";
 
 //contract ERC721MintableComplete is ERC721, Ownable, Pausable, usingOraclize {
