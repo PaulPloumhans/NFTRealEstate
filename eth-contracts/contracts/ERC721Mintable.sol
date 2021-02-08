@@ -26,7 +26,7 @@ contract ERC721MintableComplete is ERC721, Ownable, Pausable {
     //      -takes in a 'to' address, tokenId, and tokenURI as parameters
     //      -returns a true boolean upon completion of the function
     //      -calls the superclass mint and setTokenURI functions
-    function mint(address to, uint256 tokenId) public onlyOwner returns (bool) {
+    function mint(address to, uint256 tokenId) public virtual onlyOwner returns (bool) {
         _safeMint(to, tokenId);
         _setTokenURI(tokenId, tokenId.toString()); // probably not required
         return true;
